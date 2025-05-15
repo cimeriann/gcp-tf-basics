@@ -23,7 +23,9 @@ jobs:
             echo "Deployment failed!"
             exit 1 # This will cause the step to fail
           fi
-
+      - name: run npm commands
+        run: |
+             npm install
       - name: Send Email on Failure
         # This step will only run if the previous steps in the 'deploy' job fail
         if: failure()
