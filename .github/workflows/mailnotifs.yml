@@ -1,0 +1,44 @@
+name: My Deployment Workflow
+
+on:
+  push:
+    branches:
+      - main 
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Simulate Deployment
+        run: |
+          echo "Deploying application..."
+          # Add your actual deployment commands here
+          # For demonstration, let's simulate a failure sometimes
+          if (( RANDOM % 2 == 0 )); then
+            echo "Deployment successful!"
+          else
+            echo "Deployment failed!"
+            exit 1 # This will cause the step to fail
+          fi
+
+      - name: Send Email on Failure
+        # This step will only run if the previous steps in the 'deploy' job fail
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.MAIL_SERVER }}
+          server_port: ${{ secrets.MAIL_PORT }}
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: 'GitHub Actions Deployment Failed for ${{ github.repository }}'
+          body: |
+            Deployment of branch `${{ github.ref_name }}` to `${{ github.event.repository.name }}` failed!
+            Workflow: ${{ github.workflow }}
+            Run ID: ${{ github.run_id }}
+            Commit: ${{ github.sha }}
+            Check the workflow run for details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          to: ${{ secrets.MAIL_TO }}
+          from: 'GitHub Actions Notifier <${{ secrets.MAIL_USERNAME }}>' 
