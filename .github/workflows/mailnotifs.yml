@@ -17,7 +17,7 @@ jobs:
           echo "Deploying application..."
           # Add your actual deployment commands here
           # For demonstration, let's simulate a failure sometimes
-          if (( RANDOM % 2 == 0 )); then
+          if (( RANDOM % 2 == 1 )); then
             echo "Deployment successful!"
           else
             echo "Deployment failed!"
