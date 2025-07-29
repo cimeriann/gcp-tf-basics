@@ -28,7 +28,7 @@ jobs:
     #          npm install
       - name: Send Email on Failure
         # This step will only run if the previous steps in the 'deploy' job fail
-        if: success()
+        if: failure()
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: ${{ secrets.MAIL_SERVER }}
